@@ -1,0 +1,14 @@
+%canvas#sketch{ width: 320, height: 240 }
+%ul
+  %li
+    %a#clear{ href: '#' } New
+  %li
+    %a#save{ href: '#' } Save
+
+:javascript
+  $(function() {
+    doodle.saveCallback = function(response) {
+      if (typeof response.redirect != "undefined")
+        window.location.href = response.redirect;
+    }
+  });

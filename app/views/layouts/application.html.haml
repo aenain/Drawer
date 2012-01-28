@@ -1,0 +1,10 @@
+!!!
+%html
+  %head
+    %title Drawer
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "application", "http://code.jquery.com/jquery-1.7.1.min.js"
+    = csrf_meta_tags
+
+  %body
+    = yield
