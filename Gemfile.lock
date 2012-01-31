@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/ctran/annotate_models.git
+  revision: a43c08f0eb4d69a48c6830630ebb60e35ccb2d2d
+  specs:
+    annotate (2.4.1.beta1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -133,6 +139,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate!
   coffee-rails (~> 3.1.0)
   haml (~> 3.1.0)
   jquery-rails

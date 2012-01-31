@@ -9,6 +9,8 @@ gem 'mysql'
 gem 'rmagick'
 gem 'paperclip'
 
+gem 'annotate', :git => 'git://github.com/ctran/annotate_models.git'
+
 gem 'haml', "~> 3.1.0"
 gem 'sass', "~> 3.1.12"
 gem 'sass-rails', "~> 3.1.0"
