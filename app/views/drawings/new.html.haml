@@ -1,9 +1,40 @@
-%canvas#sketch{ width: 320, height: 240 }
-%ul
-  %li
-    %a#clear{ href: '#' } New
-  %li
-    %a#save{ href: '#' } Save
+.header
+  = image_tag "/assets/magicalc.svg", id: 'logo'
+
+.content
+  .slide-panel
+    .drawing-series
+      .canvas-container.drawing.current
+        %canvas{ width: 100, height: 100 }
+
+      .canvas-container.drawing
+        %canvas{ width: 100, height: 100 }
+
+  .main-frame-container
+    #main-frame.canvas-container.main.drawing.frame
+      = canvas_navigation_tag(:previous, class: 'hidden')
+      %canvas#sketch{ width: 100, height: 100 }
+      = canvas_navigation_tag(:next)
+
+  .actions
+    = image_tag "/assets/do-the-magic.svg"
+
+  .about
+    = link_to "About", '#', class: 'link'
+
+    .description
+      %h3 What's inside?
+      %p
+        Interface has been made in HTML5 with a pinch of CSS3's and scalable vector graphics' magic inside. jQuery was also very useful ;)
+        Back-end has been written in Ruby on Rails. Images are converted from HTML5 canvas to PNG and then to PBM. Those files are sent to the Artificial Neural Network written in Ada where they are processed and recognized and then back to Ruby on Rails as a text.
+
+      %h3 Who stays behind?
+      %p
+        %strong Szymon Sobański
+        rocks because he has made a powerful neural network for image processing.
+        %br
+        %strong Artur Hebda
+        is amazing because the part, what you are actually looking at, was his job.
 
 :javascript
   $(function() {
@@ -11,4 +42,57 @@
       if (typeof response.redirect != "undefined")
         window.location.href = response.redirect;
     }
+
+    $(window).resize(function() {
+      $(".about").css({ top: '100%' });
+    });
+
+    function add_canvas() {
+      var $canvas = $("<div class = 'canvas-container drawing'><canvas width = '100' height = '100'></canvas></div>");
+      $canvas.appendTo($(".drawing-series"));
+      return $canvas;
+    }
+
+    $(".drawing-series").css({ marginLeft: ($("#main-frame").offset().left - 5) + 'px' });
+
+    $("#main-frame .next").click(function() {
+      $(this).siblings(".previous").removeClass("hidden");
+      var $next = $(".drawing-series .current").removeClass("current").next().addClass("current");
+
+      if ($next.next().size() == 0)
+        if ($(".drawing-series .canvas-container").size() < 30)
+          add_canvas();
+        else
+          $(this).addClass("hidden");
+
+      $(".drawing-series").animate({ marginLeft: '-=106px' }, 200);
+    });
+
+    $("#main-frame .previous").click(function() {
+      $(this).siblings(".next").removeClass("hidden");
+      var $prev = $(".drawing-series .current").removeClass("current").prev().addClass("current");
+
+      if ($prev.prev().size() == 0)
+        $(this).addClass("hidden");
+
+      $(".drawing-series").animate({ marginLeft: '+=106px' }, 200);
+    });
+
+    $(".about .link").toggle(function(event) {
+      event.preventDefault();
+
+      var aboutHeight = $(".about").height();
+      var windowHeight = $(window).height();
+
+      $(".about").css({ top: windowHeight + 'px' }).animate({ top: (windowHeight - aboutHeight) + 'px' }, 200);
+    }, function(event) {
+      event.preventDefault();
+
+      var aboutHeight = $(".about").height();
+      var windowHeight = $(window).height();
+
+      $(".about").css({ top: (windowHeight - aboutHeight) + 'px' }).animate({ top: windowHeight + 'px' }, 200, function() {
+        $(".about").css({ top: '100%' });
+      });
+    });
   });

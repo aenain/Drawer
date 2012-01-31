@@ -68,24 +68,19 @@ var doodle = {
     'colour':           '#000',
     'noticeID':         '#notification',
     'loaded_id':        false,
-    'saveCallback': 	null
+    'width':            100,
+    'height':           100, 
+    'saveCallback': 	  null
 };
 
 doodle.init = function() {
     // Collect elements from the DOM and set-up the canvas
     doodle.canvas = $('#sketch')[0];
     doodle.context = doodle.canvas.getContext('2d');
-    doodle.oldState = doodle.context.getImageData(0, 0, 320, 240);
+    doodle.oldState = doodle.context.getImageData(0, 0, doodle.width, doodle.height);
     
     doodle.newDoodle();
-    
-    $('#share div').hide();    
-    // Set up the share links
-    $('#share h2').bind('click', function() {
-        $('#share div').slideToggle('normal');
-    });
-
-    
+  
     // Mouse based interface
     $(doodle.canvas).bind('mousedown', doodle.drawStart);
     $(doodle.canvas).bind('mousemove', doodle.draw);
@@ -101,26 +96,11 @@ doodle.init = function() {
     $(doodle.canvas).bind('touchend', doodle.drawEnd);
     
     // Add save event to save button
-    $(doodle.saveID).bind('click', doodle.saveImage);
+    // $(doodle.saveID).bind('click', doodle.saveImage);
     
     // Add clear canvas event
-    $(doodle.newID).bind('click', doodle.newDoodle);
-    
-    // Add Pen selection event
-    $(doodle.penID).bind('click', doodle.pen);
-    $(doodle.eraserID).bind('click', doodle.eraser);
-    
-    // Brush size
-    $(window).bind('keydown', doodle.changeBrushSize);
-    
+    // $(doodle.newID).bind('click', doodle.newDoodle);
 };
-
-doodle.loadDoodles = function(cookie) {
-    var keys = cookie.split(",");
-    for (var i = 0; i < keys.length; i++) {
-        doodle.newDoodle('/thumb?id='+keys[i]+'&rnd='+Math.random(), keys[i]);
-    }
-}
 
 doodle.saveImage = function(ev) {
     // Extract the Base64 data from the canvas and post it to the server
@@ -132,75 +112,13 @@ doodle.saveImage = function(ev) {
 	});
 }
 
-
-// Change the size of the brush
-doodle.changeBrushSize = function(ev) {
-    if (ev.keyCode === 219 && doodle.linethickness > 1) {
-        doodle.linethickness -= 1;
-        doodle.draw(ev);
-    }
-    
-    if (ev.keyCode === 221 && doodle.linethickness < 1000) {
-        doodle.linethickness += 1;
-        doodle.draw(ev);
-    }
-}
-
-doodle.updateThumb = function(data) {
-    // Notify the user that the image has been saved
-    //$(doodle.noticeID).html('Saved');
-
-    var thumb = $('img.active');
-    // Reset the thumb image
-    // Note: a random number is added to the image to prevent caching
-    thumb.attr('src', '/thumb?id='+data+'&rnd='+Math.random());
-    thumb.attr('id', 'i'+data);
-    $('img.active').bind('click', doodle.loadImage);
-    
-    // Save doodle ID to a cookie
-    if (doodle.loaded_id !== data) {
-        var keys;
-        if ($.cookie('doodles')) {
-            keys = $.cookie('doodles') + ',' + data;
-        } else {
-            keys = data;
-        }
-        $.cookie('doodles', keys);
-    }
-    
-    // Store doodle ID
-    doodle.loaded_id = data;
-    
-    // The doodle has been saved, update from here on
-    doodle.updating = true;
-}
-
 doodle.newDoodle = function(src, id) {
     doodle.clearCanvas();
-    if (!src) {
-        src = '/static/images/blank.gif';
-    }
-    
-    if (!id) {
-        id = '';
-    }
-    // Build an empty thumb
-    thumb_html = '<img class="active" src="'+src+'" id="i'+id+'" width="32" height="24" />';
-
-    // Add the thumb to the DOM then bind click event
-    $('#output').append(thumb_html);
-    $('#output img').bind('click', doodle.loadImage);
-    //$('img.active').bind('click', doodle.loadImage);
 }
 
 doodle.loadImage = function(event) {
     // Stop from following link
     event.preventDefault();
-    
-    // If the current doodle is loaded, do nothing
-    if ($(this).hasClass('active')) {
-        return;
-    }
     
     // Clear the canvas
     doodle.clearCanvas();
@@ -215,21 +133,11 @@ doodle.loadImage = function(event) {
         // Wait for image to finish loading before drawing to canvas
         img.onload = function() {
             doodle.context.drawImage(img, 0, 0);
-            doodle.oldState = doodle.context.getImageData(0, 0, 320, 240);
+            doodle.oldState = doodle.context.getImageData(0, 0, doodle.width, doodle.height);
         };
-        
-        // Flag that user is updating a saved doodle
-        doodle.updating = true;
-    } else {
+     } else {
         
     }
-    
-    
-    // Add active class to selected thumb
-    $(this).addClass('active');  
-    
-
-
 }
 
 doodle.clearCanvas = function(ev) {
@@ -243,20 +151,12 @@ doodle.clearCanvas = function(ev) {
     doodle.context.fillRect(0, 0, doodle.canvas.width, doodle.canvas.height);
     doodle.context.fillStyle = '#000000';
     
-    // Remove active class from other thumbs
-    $('#output IMG').each(function() {
-        $(this).removeClass('active');
-    });
-    
     // Clear state
-    doodle.oldState = doodle.context.getImageData(0, 0, 320, 240);
+    doodle.oldState = doodle.context.getImageData(0, 0, doodle.width, doodle.height);
     
     // Set the drawning method to pen
     doodle.pen();
-    
-    // Flag that the user is working on a new doodle
-    doodle.updating = false;
-}
+ }
 
 doodle.drawStart = function(ev) {
     ev.preventDefault();
@@ -288,7 +188,7 @@ doodle.draw = function(event) {
         doodle.context.lineTo(x, y);
         doodle.context.closePath();
         doodle.context.stroke();
-        doodle.oldState = doodle.context.getImageData(0, 0, 320, 240);
+        doodle.oldState = doodle.context.getImageData(0, 0, doodle.width, doodle.height);
     } else {
     
         doodle.context.putImageData(doodle.oldState, 0, 0);
@@ -320,32 +220,6 @@ doodle.drawEnd = function(ev) {
 
 // Set the drawing method to pen
 doodle.pen = function() {
-    // Check if pen is already selected
-    if($(doodle.penID).hasClass('active')) {
-        return;
-    }
     // Change color and thickness of the line
     doodle.colour = '#000000';
-    
-    // Flag that pen is now active
-    $(doodle.penID).toggleClass('active');
-    
-    // Remove active state from eraser
-    $(doodle.eraserID).removeClass('active');
-}
-
-// Set the drawing method to eraser
-doodle.eraser = function() {
-    // Check if pen is already selected
-    if($(doodle.eraserID).hasClass('active')) {
-        return;
-    }
-    // Change color and thickness of the line
-    doodle.colour = '#FFFFFF';
-    
-    // Flag that eraser is now active
-    $(doodle.eraserID).toggleClass('active');
-    
-    // Remove active state from pen
-    $(doodle.penID).removeClass('active');
 }
