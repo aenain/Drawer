@@ -19,33 +19,12 @@
   .actions
     = image_tag "/assets/do-the-magic.svg"
 
-  .about
-    = link_to "About", '#', class: 'link'
-
-    .description
-      %h3 What's inside?
-      %p
-        Interface has been made in HTML5 with a pinch of CSS3's and scalable vector graphics' magic inside. jQuery was also very useful ;)
-        Back-end has been written in Ruby on Rails. Images are converted from HTML5 canvas to PNG and then to PBM. Those files are sent to the Artificial Neural Network written in Ada where they are processed and recognized and then back to Ruby on Rails as a text.
-
-      %h3 Who stays behind?
-      %p
-        %strong Szymon Sobański
-        rocks because he has made a powerful neural network for image processing.
-        %br
-        %strong Artur Hebda
-        is amazing because the part, what you are actually looking at, was his job.
-
 :javascript
   $(function() {
     doodle.saveCallback = function(response) {
       if (typeof response.redirect != "undefined")
         window.location.href = response.redirect;
     }
-
-    $(window).resize(function() {
-      $(".about").css({ top: '100%' });
-    });
 
     function add_canvas() {
       var $canvas = $("<div class = 'canvas-container drawing'><canvas width = '100' height = '100'></canvas></div>");
@@ -90,21 +69,4 @@
       $(".drawing-series").animate({ marginLeft: '+=106px' }, 200, function() { $("#sketch").show(); });
     });
 
-    $(".about .link").toggle(function(event) {
-      event.preventDefault();
-
-      var aboutHeight = $(".about").height();
-      var windowHeight = $(window).height();
-
-      $(".about").css({ top: windowHeight + 'px' }).animate({ top: (windowHeight - aboutHeight) + 'px' }, 200);
-    }, function(event) {
-      event.preventDefault();
-
-      var aboutHeight = $(".about").height();
-      var windowHeight = $(window).height();
-
-      $(".about").css({ top: (windowHeight - aboutHeight) + 'px' }).animate({ top: windowHeight + 'px' }, 200, function() {
-        $(".about").css({ top: '100%' });
-      });
-    });
   });

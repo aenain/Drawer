@@ -8,3 +8,32 @@
 
   %body
     = yield
+
+    .about
+      = link_to "About", '#', class: 'link'
+
+      .description
+        %h3 What's inside?
+        %p
+          Interface has been made in HTML5 with a pinch of CSS3's and scalable vector graphics' magic inside. jQuery was also very useful ;)
+          Back-end has been written in Ruby on Rails. Images are converted from HTML5 canvas to PNG and then to PBM. Those files are sent to the Artificial Neural Network written in Ada where they are processed and recognized and then back to Ruby on Rails as a text.
+
+        %h3 Who stays behind?
+        %p
+          %strong Szymon Sobański
+          rocks because he has made a powerful neural network for image processing.
+          %br
+          %strong Artur Hebda
+          is amazing because the part, what you are actually looking at, was his job.
+
+    :javascript
+      $(function() {
+        $(window).resize(function() {
+          about.onResize();
+        });
+
+        $(".about .link").click(function(event) {
+          event.preventDefault();
+          about.toggle();
+        });
+      });

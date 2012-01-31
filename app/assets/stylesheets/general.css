@@ -13,7 +13,7 @@ body {
   display: none; }
 
 .header {
-  padding-top: 18%;
+  padding-top: 10%;
   background-color: white;
   text-align: center;
   border-bottom: 1px solid #dddddd; }
@@ -76,28 +76,29 @@ body {
   .content .actions {
     margin-top: 50px;
     text-align: center; }
-  .content .about {
-    position: absolute;
-    z-index: 12;
-    width: 100%;
-    top: 100%;
+
+.about {
+  position: absolute;
+  z-index: 12;
+  width: 100%;
+  top: 100%;
+  background-color: #555555;
+  border-top: 1px solid #333333; }
+  .about .description {
+    padding: 20px 20px 40px 20px;
+    color: white;
+    font-size: 14px; }
+    .about .description strong {
+      color: #f4c221; }
+  .about a.link {
+    display: block;
+    margin-top: -36px;
+    border-radius: 10px;
     background-color: #555555;
-    border-top: 1px solid #333333; }
-    .content .about .description {
-      padding: 20px 20px 40px 20px;
-      color: white;
-      font-size: 14px; }
-      .content .about .description strong {
-        color: #f4c221; }
-    .content .about a.link {
-      display: block;
-      margin-top: -36px;
-      border-radius: 10px;
-      background-color: #555555;
-      padding: 10px 15px 17px 15px;
-      text-shadow: #333333 1px 1px 0;
-      font-size: 16px;
-      line-height: 16px;
-      color: white;
-      float: right;
-      margin-right: 20px; }
+    padding: 10px 15px 17px 15px;
+    text-shadow: #333333 1px 1px 0;
+    font-size: 16px;
+    line-height: 16px;
+    color: white;
+    float: right;
+    margin-right: 20px; }
