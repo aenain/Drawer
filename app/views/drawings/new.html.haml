@@ -57,7 +57,8 @@
 
     $("#main-frame .next").click(function() {
       $(this).siblings(".previous").removeClass("hidden");
-      var $next = $(".drawing-series .current").removeClass("current").next().addClass("current");
+      var $current = $(".drawing-series .current").removeClass("current");
+      var $next = $current.next().addClass("current");
 
       if ($next.next().size() == 0)
         if ($(".drawing-series .canvas-container").size() < 30)
@@ -65,17 +66,28 @@
         else
           $(this).addClass("hidden");
 
-      $(".drawing-series").animate({ marginLeft: '-=106px' }, 200);
+      $current.find("canvas")[0].getContext("2d").putImageData(doodle.context.getImageData(0, 0, doodle.width, doodle.height), 0, 0);
+      doodle.context.putImageData($next.find("canvas")[0].getContext("2d").getImageData(0, 0, doodle.width, doodle.height), 0, 0);
+      doodle.oldState = doodle.context.getImageData(0, 0, doodle.width, doodle.height);
+ 
+      $("#sketch").hide();
+      $(".drawing-series").animate({ marginLeft: '-=106px' }, 200, function() { $("#sketch").show(); });
     });
 
     $("#main-frame .previous").click(function() {
       $(this).siblings(".next").removeClass("hidden");
-      var $prev = $(".drawing-series .current").removeClass("current").prev().addClass("current");
+      var $current = $(".drawing-series .current").removeClass("current");
+      var $prev = $current.prev().addClass("current");
 
       if ($prev.prev().size() == 0)
         $(this).addClass("hidden");
 
-      $(".drawing-series").animate({ marginLeft: '+=106px' }, 200);
+      $current.find("canvas")[0].getContext("2d").putImageData(doodle.context.getImageData(0, 0, doodle.width, doodle.height), 0, 0);
+      doodle.context.putImageData($prev.find("canvas")[0].getContext("2d").getImageData(0, 0, doodle.width, doodle.height), 0, 0);
+      doodle.oldState = doodle.context.getImageData(0, 0, doodle.width, doodle.height);
+
+      $("#sketch").hide();
+      $(".drawing-series").animate({ marginLeft: '+=106px' }, 200, function() { $("#sketch").show(); });
     });
 
     $(".about .link").toggle(function(event) {

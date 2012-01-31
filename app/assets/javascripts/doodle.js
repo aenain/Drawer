@@ -60,14 +60,6 @@ var doodle = {
     // Define some variables
     'drawing':          false,
     'linethickness':    1,
-    'updating':         false,
-    'saveID':           '#save',
-    'newID':            '#clear',
-    'penID':            '#pen',
-    'eraserID':         '#eraser',
-    'colour':           '#000',
-    'noticeID':         '#notification',
-    'loaded_id':        false,
     'width':            100,
     'height':           100, 
     'saveCallback': 	  null
