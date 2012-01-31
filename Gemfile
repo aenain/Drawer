@@ -10,6 +10,7 @@ gem 'rmagick'
 gem 'paperclip'
 
 gem 'haml', "~> 3.1.0"
+gem 'sass', "~> 3.1.12"
 gem 'sass-rails', "~> 3.1.0"
 
 # Gems used only for assets and not required
