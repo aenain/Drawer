@@ -6,6 +6,9 @@
     = javascript_include_tag "application", "http://code.jquery.com/jquery-1.7.1.min.js"
     = csrf_meta_tags
 
+    %link{ rel: 'icon', href: '/assets/favicon.png', type: 'image/x-icon' }
+    %link{ rel: 'shortcut icon', href: '/assets/favicon.png', type: 'image/x-icon' }
+
   %body
     = yield
 
@@ -27,11 +30,18 @@
           is amazing because the part, what you are actually looking at, was his job.
 
     :javascript
+      $.ajaxSetup({
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+        }
+      });
+      
       $(function() {
         $(window).resize(function() {
           about.onResize();
+          doodleSeries.alignSeriesToFrame();
         });
-
+        
         $(".about .link").click(function(event) {
           event.preventDefault();
           about.toggle();

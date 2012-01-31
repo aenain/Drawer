@@ -5,6 +5,7 @@ var about = {
 
   onResize: function() {
     $(this.selector).css({ top: '100%' });
+    this.isHidden = true;
   },
 
   toggle: function() {

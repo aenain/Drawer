@@ -12,6 +12,20 @@ body {
 .hidden {
   display: none; }
 
+.vertical-space {
+  width: 0;
+  height: 0;
+  float: none;
+  margin: 10px 0;
+  padding: 0; }
+
+.image-link {
+  outline: none;
+  cursor: pointer; }
+
+a {
+  outline: none; }
+
 .header {
   padding-top: 10%;
   background-color: white;
@@ -73,9 +87,25 @@ body {
           left: -30px; }
         .content .canvas-container.frame .navigation-link.next {
           right: -30px; }
-  .content .actions {
+  .content .actions, .content .result {
     margin-top: 50px;
     text-align: center; }
+    .content .actions.result, .content .result.result {
+      margin-top: 30px; }
+    .content .actions .response, .content .result .response {
+      margin-bottom: 20px;
+      text-align: center; }
+      .content .actions .response .label, .content .result .response .label {
+        width: 400px;
+        margin: 0 auto;
+        color: #bbbbbb;
+        font-size: 13px;
+        border-bottom: 1px solid #e3e3e3; }
+      .content .actions .response .value, .content .result .response .value {
+        color: #319ee6;
+        padding: 3px 0;
+        height: 19px;
+        line-height: 13px; }
 
 .about {
   position: absolute;
@@ -88,6 +118,8 @@ body {
     padding: 20px 20px 40px 20px;
     color: white;
     font-size: 14px; }
+    .about .description h1, .about .description h2, .about .description h3 {
+      text-shadow: #333333 1px 1px 0; }
     .about .description strong {
       color: #f4c221; }
   .about a.link {
@@ -97,6 +129,7 @@ body {
     background-color: #555555;
     padding: 10px 15px 17px 15px;
     text-shadow: #333333 1px 1px 0;
+    text-decoration: none;
     font-size: 16px;
     line-height: 16px;
     color: white;

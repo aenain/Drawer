@@ -1,0 +1,71 @@
+.header
+  = image_tag "/assets/magicalc.svg", id: 'logo'
+
+.content
+  .slide-panel
+    #drawing-series.drawing-series
+      .canvas-container.drawing.current
+        %canvas{ width: 100, height: 100 }
+
+      .canvas-container.drawing
+        %canvas{ width: 100, height: 100 }
+
+  .main-frame-container
+    #main-frame.canvas-container.main.drawing.frame
+      = canvas_navigation_tag(:previous, class: 'hidden')
+      %canvas#sketch{ width: 100, height: 100 }
+      = canvas_navigation_tag(:next)
+
+  .actions
+    = image_tag "/assets/do-the-magic.svg", id: 'process', class: 'image-link'
+
+  .result.hidden
+    = image_tag "/assets/ajax-loader.gif", class: 'loader'
+
+    .response.hidden
+      .label
+        Recognition
+      #recognition.value
+
+      .vertical-space
+
+      .label
+        Evaluation
+      #evaluation.value
+
+    = image_tag "/assets/again.svg", id: 'again', class: 'image-link hidden'
+    
+
+:javascript
+  $(function() {
+    $(".image-link").hover(images.onMouseEnter, images.onMouseLeave);
+    $(".result.hidden, .result .hidden").hide().removeClass('hidden');
+
+    doodleSeries.init();
+
+    $("#process").click(function() {
+      $(".actions").fadeOut('fast', function() {
+        $(".result").fadeIn();
+      });
+    });
+
+    $("#again").click(function() {
+      doodleSeries.reset();
+
+      $(".result").fadeOut('fast', function() {
+        $(".response, #again").hide();
+        $(".result .loader").show();
+
+        $(".actions").fadeIn();
+      });
+    });
+
+    doodleSeries.processCallback = function(response) {
+      $("#recognition").text(response.recognition);
+      $("#evaluation").text(response.evaluation);
+      
+      $(".result .loader").stop().clearQueue().fadeOut('fast', function() {
+        $(".response, #again").fadeIn();
+      });
+    };
+  });

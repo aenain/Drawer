@@ -215,3 +215,11 @@ doodle.pen = function() {
     // Change color and thickness of the line
     doodle.colour = '#000000';
 }
+
+doodle.hide = function() {
+  $(doodle.canvas).hide();
+}
+
+doodle.show = function() {
+  $(doodle.canvas).show();
+}

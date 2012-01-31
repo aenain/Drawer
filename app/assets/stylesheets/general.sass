@@ -12,6 +12,20 @@ body
 .hidden
   display: none
 
+.vertical-space
+  width: 0
+  height: 0
+  float: none
+  margin: 10px 0
+  padding: 0
+
+.image-link
+  outline: none
+  cursor: pointer
+
+a
+  outline: none
+
 .header
   padding-top: 10%
   background-color: #fff
@@ -88,9 +102,29 @@ body
         &.next
           right: -30px
 
-  .actions
+  .actions, .result
     margin-top: 50px
     text-align: center
+
+    &.result
+      margin-top: 30px
+
+    .response
+      margin-bottom: 20px
+      text-align: center
+
+      .label
+        width: 400px
+        margin: 0 auto
+        color: #bbb
+        font-size: 13px
+        border-bottom: 1px solid #e3e3e3
+
+      .value
+        color: #319ee6
+        padding: 3px 0
+        height: 19px
+        line-height: 13px
 
 .about
   position: absolute
@@ -105,6 +139,9 @@ body
     color: #fff
     font-size: 14px
 
+    h1, h2, h3
+      text-shadow: #333 1px 1px 0
+
     strong
       color: rgb(244, 194, 33)
 
@@ -115,6 +152,7 @@ body
     background-color: #555
     padding: 10px 15px 17px 15px
     text-shadow: #333 1px 1px 0
+    text-decoration: none
 
     font-size: 16px
     line-height: 16px
