@@ -103,7 +103,7 @@ a {
         border-bottom: 1px solid #e3e3e3; }
       .content .actions .response .value, .content .result .response .value {
         color: #319ee6;
-        padding: 3px 0;
+        padding: 4px 0 3px 0;
         height: 19px;
         line-height: 13px; }
 
