@@ -1,4 +1,6 @@
 class Drawing < ActiveRecord::Base
+  belongs_to :drawing_set
+
   has_attached_file :sketch
 
   def recognize!
@@ -31,3 +33,18 @@ class Drawing < ActiveRecord::Base
     File.dirname(sketch.path)
   end
 end
+# == Schema Information
+#
+# Table name: drawings
+#
+#  id                  :integer(4)      not null, primary key
+#  created_at          :datetime
+#  updated_at          :datetime
+#  sketch_file_name    :string(255)
+#  sketch_content_type :string(255)
+#  sketch_file_size    :integer(4)
+#  sketch_updated_at   :datetime
+#  network_file_path   :string(255)
+#  recognition         :string(255)
+#  drawing_set_id      :integer(4)
+#

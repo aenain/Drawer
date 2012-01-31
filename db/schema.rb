@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120128204945) do
+ActiveRecord::Schema.define(:version => 20120131143418) do
+
+  create_table "drawing_sets", :force => true do |t|
+    t.string   "recognition"
+    t.string   "evaluation"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "drawings", :force => true do |t|
     t.datetime "created_at"
@@ -22,6 +29,9 @@ ActiveRecord::Schema.define(:version => 20120128204945) do
     t.datetime "sketch_updated_at"
     t.string   "network_file_path"
     t.string   "recognition"
+    t.integer  "drawing_set_id"
   end
+
+  add_index "drawings", ["drawing_set_id"], :name => "index_drawings_on_drawing_set_id"
 
 end
