@@ -15,8 +15,11 @@ var doodleSeries = {
   processCallback: null,
 
   init: function() {
+    var $currentCanvas = $(this.selectors.series).find(".current canvas");
+
     this.alignSeriesToFrame();
     this.bindEvents();
+    this.markAsFilled($currentCanvas);
   },
 
   alignSeriesToFrame: function() {
@@ -27,6 +30,14 @@ var doodleSeries = {
     $(this.selectors.previousLink).bind('click.doodleSeries.prev', this.previous);
     $(this.selectors.nextLink).bind('click.doodleSeries.next', this.next);
     $(this.selectors.processLink).bind('click.doodleSeries.process', this.process);
+  },
+
+  markAsFilled: function($canvas) {
+    $canvas.attr("data-filled", true);
+  },
+
+  isFilled: function($canvas) {
+    return !! $canvas.attr("data-filled");
   },
 
   // keyword this has been replaced with doodleSeries because this method is used as a callback
@@ -49,6 +60,8 @@ var doodleSeries = {
   next: function() {
     var $current = doodleSeries.getCurrent().removeClass('current');
     var $next = $current.next().addClass('current');
+    var $nextCanvas = $next.find('canvas');
+
     $(doodleSeries.selectors.previousLink).removeClass('hidden');
 
     if ($next.next().size() == 0)
@@ -58,7 +71,13 @@ var doodleSeries = {
         $(doodleSeries.selectors.nextLink).addClass("hidden");
 
     doodleSeries.copyImage(doodle.context, doodleSeries.getContextFromContainer($current));
-    doodle.oldState = doodleSeries.copyImage(doodleSeries.getContextFromContainer($next), doodle.context);
+
+    if (! doodleSeries.isFilled($nextCanvas)) {
+      doodleSeries.markAsFilled($nextCanvas);
+      doodle.clearCanvas();
+    }
+    else
+      doodle.oldState = doodleSeries.copyImage(doodleSeries.getContextFromContainer($next), doodle.context);
 
     doodle.hide();
     doodleSeries.slide({ direction: 'left' }, doodle.show);
@@ -66,6 +85,14 @@ var doodleSeries = {
 
   getCurrent: function() {
     return $(this.selectors.series).find('.current');
+  },
+
+  getPrevious: function($current) {
+    return ($current || this.getCurrent()).prev();
+  },
+
+  getNext: function($current) {
+    return ($current || this.getCurrent()).next();
   },
 
   addCanvas: function() {
@@ -94,7 +121,10 @@ var doodleSeries = {
   },
 
   process: function() {
-    var $canvases = $(doodleSeries.selectors.series).find('canvas');
+    // to make sure that current drawing will be on canvas in doodleSeries
+    doodleSeries.copyImage(doodle.context, doodleSeries.getContextFromContainer(doodleSeries.getCurrent()));
+
+    var $canvases = $(doodleSeries.selectors.series).find("canvas[data-filled='true']");
     var images = new Array($canvases.length);
 
     $canvases.each(function(i) {
