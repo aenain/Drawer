@@ -3,7 +3,7 @@
   %head
     %title Magic Calculator
     = stylesheet_link_tag "general"
-    = javascript_include_tag "application", "http://code.jquery.com/jquery-1.7.1.min.js"
+    = javascript_include_tag "http://code.jquery.com/jquery-1.7.1.min.js", "about", "images", "doodle", "doodle_series", "worker"
     = csrf_meta_tags
 
     %link{ rel: 'icon', href: '/assets/favicon.png', type: 'image/x-icon' }
@@ -37,10 +37,7 @@
       });
       
       $(function() {
-        $(window).resize(function() {
-          about.onResize();
-          doodleSeries.alignSeriesToFrame();
-        });
+        $(window).bind('resize.about', about.onResize);
         
         $(".about .link").click(function(event) {
           event.preventDefault();

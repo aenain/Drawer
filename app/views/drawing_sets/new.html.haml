@@ -42,20 +42,26 @@
     $(".result.hidden, .result .hidden").hide().removeClass('hidden');
 
     doodleSeries.init();
+    $(window).bind('resize.doodleSeries', doodleSeries.onResize);
+
+    var doodleProcessResponse = new Worker({ tasks: 2 },
+      function() {
+        $(".result .loader").fadeOut("fast", function() {
+          $(".response, #again").fadeIn();
+        });
+      });
 
     $("#process").click(function() {
-      $(".actions").fadeOut('fast', function() {
-        $(".result").fadeIn();
+      $(".actions").fadeOut("fast", function() {
+        $(".result").fadeIn("normal", function() {
+          doodleProcessResponse.finish();
+        });
       });
     });
 
     $("#again").click(function() {
-      doodleSeries.reset();
-
-      $(".result").fadeOut('fast', function() {
-        $(".response, #again").hide();
-        $(".result .loader").show();
-
+      $(".result").fadeOut("fast", function() {
+        $(this).find(".response, #again").hide();
         $(".actions").fadeIn();
       });
     });
@@ -63,9 +69,7 @@
     doodleSeries.processCallback = function(response) {
       $("#recognition").text(response.recognition);
       $("#evaluation").text(response.evaluation);
-      
-      $(".result .loader").stop().clearQueue().fadeOut('fast', function() {
-        $(".response, #again").fadeIn();
-      });
+
+      doodleProcessResponse.finish();
     };
   });

@@ -2,111 +2,176 @@ var doodleSeries = {
   selectors: {
     series: '#drawing-series',
     frame: '#main-frame',
-    processLink: '#process',
-    previousLink: '#main-frame .navigation-link.previous',
-    nextLink: '#main-frame .navigation-link.next'
+    links: {
+      process: '#process',
+      reset: '#again',
+      previous: '#main-frame .navigation-link.previous',
+      next: '#main-frame .navigation-link.next'
+    }
   },
   doodle: {
     width: 100,
     height: 100
   },
   duration: 200,
+  index: 0,
+  count: null,
   maxCount: 30,
   processCallback: null,
+  resizeTimeout: null,
 
   init: function() {
-    var $currentCanvas = $(this.selectors.series).find(".current canvas");
-
-    this.alignSeriesToFrame();
+    this.cacheElements();
     this.bindEvents();
-    this.markAsFilled($currentCanvas);
+    this.alignSeriesToFrame();
+    this.markAsFilled(this.$current);
+
+    this.count = this.$series.find("canvas").size();
+    this.currentIndex = 0; // I assume that it should start with the first canvas!
   },
 
-  alignSeriesToFrame: function() {
-    $(this.selectors.series).css({ marginLeft: ($(this.selectors.frame).offset().left - 5) + 'px' });
+  cacheElements: function() {
+    this.$series = $(this.selectors.series);
+    this.$current = this.$series.find(".current");
+
+    if (this.$current.size() < 1)
+      this.$current = this.$series.find(".canvas-container:first").addClass("current");
+
+    this.$previous = this.$current.prev();
+    this.$next = this.$current.next();
+
+    this.$frame = $(this.selectors.frame);
+    this.links = {
+      $previous: $(this.selectors.links.previous),
+      $next: $(this.selectors.links.next),
+      $process: $(this.selectors.links.process),
+      $reset: $(this.selectors.links.reset)
+    };
   },
 
   bindEvents: function() {
-    $(this.selectors.previousLink).bind('click.doodleSeries.prev', this.previous);
-    $(this.selectors.nextLink).bind('click.doodleSeries.next', this.next);
-    $(this.selectors.processLink).bind('click.doodleSeries.process', this.process);
+     this.links.$previous.bind('click.doodleSeries.prev', this.previous);
+     this.links.$next.bind('click.doodleSeries.next', this.next);
+     this.links.$process.bind('click.doodleSeries.process', this.process);
+     this.links.$reset.bind('click.doodleSeries.reset', this.reset);
+   },
+
+  alignSeriesToFrame: function() {
+    this.$series.css({ marginLeft: (this.$frame.offset().left - 5) + 'px' });
   },
 
-  markAsFilled: function($canvas) {
-    $canvas.attr("data-filled", true);
-  },
-
-  isFilled: function($canvas) {
+  isFilled: function($container) {
+    var $canvas = $container.find("canvas");
     return !! $canvas.attr("data-filled");
   },
 
-  // keyword this has been replaced with doodleSeries because this method is used as a callback
+  markAsFilled: function($container) {
+    var $canvas = $container.find("canvas");
+    $canvas.attr("data-filled", true);
+  },
+
+  onResize: function() {
+    var ds = doodleSeries;
+
+    clearTimeout(ds.resizeTimeout);
+    ds.resizeTimeout = setTimeout(ds.afterResize, 100);
+  },
+
+  afterResize: function() {
+    var ds = doodleSeries;
+    ds.currentIndex = 0;
+
+    ds.hideLink("$previous");
+    ds.showLink("$next");
+    ds.alignSeriesToFrame();
+
+    ds.setCurrent(ds.getFirst(), { canvas: true });
+  },
+
   previous: function() {
-    var $current = doodleSeries.getCurrent().removeClass('current');
-    var $prev = $current.prev().addClass('current');
-    $(doodleSeries.selectors.nextLink).removeClass('hidden');
+    var ds = doodleSeries;
+    ds.showLink('$next');
+    ds.currentIndex--;
 
-    if ($prev.prev().size() == 0)
-      $(doodleSeries.selectors.previousLink).addClass("hidden");
+    if (ds.isFirst())
+      ds.hideLink('$previous');
 
-    doodleSeries.copyImage(doodle.context, doodleSeries.getContextFromContainer($current));
-    doodle.oldState = doodleSeries.copyImage(doodleSeries.getContextFromContainer($prev), doodle.context);
-
-    doodle.hide();
-    doodleSeries.slide({ direction: 'right' }, doodle.show);
+    ds.setCurrent(ds.$previous, { canvas: true });
+    ds.slide({ direction: 'right' }, doodle.show);
   },
 
-  // keyword this has been replaced with doodleSeries because this method is used as a callback
   next: function() {
-    var $current = doodleSeries.getCurrent().removeClass('current');
-    var $next = $current.next().addClass('current');
-    var $nextCanvas = $next.find('canvas');
+    var ds = doodleSeries;
+    ds.showLink("$previous");
+    ds.currentIndex++;
 
-    $(doodleSeries.selectors.previousLink).removeClass('hidden');
-
-    if ($next.next().size() == 0)
-      if ($(doodleSeries.selectors.series).children().size() < doodleSeries.maxCount)
-        doodleSeries.addCanvas();
+    if (ds.isRightBeforeEnd())
+      if (! ds.isFull())
+        ds.addCanvas();
       else
-        $(doodleSeries.selectors.nextLink).addClass("hidden");
+        ds.hideLink("$next");
 
-    doodleSeries.copyImage(doodle.context, doodleSeries.getContextFromContainer($current));
+    ds.copyImageToCurrentCanvas();
+    ds.copyImageFromContainer(ds.$next, { fill: ! ds.isFilled(ds.$next) });
 
-    if (! doodleSeries.isFilled($nextCanvas)) {
-      doodleSeries.markAsFilled($nextCanvas);
-      doodle.clearCanvas();
-    }
-    else
-      doodle.oldState = doodleSeries.copyImage(doodleSeries.getContextFromContainer($next), doodle.context);
+    ds.setCurrent(ds.$next);
+    ds.slide({ direction: 'left' }, doodle.show);
+  },
 
+  slide: function(options, callback) {
     doodle.hide();
-    doodleSeries.slide({ direction: 'left' }, doodle.show);
+
+    var marginChange = (options.direction == 'left') ? '-=106px' : '+=106px';
+    this.$series.animate({ marginLeft: marginChange }, this.duration, callback);
   },
 
-  getCurrent: function() {
-    return $(this.selectors.series).find('.current');
+  showLink: function(name) {
+    this.links[name].removeClass('hidden');
   },
 
-  getPrevious: function($current) {
-    return ($current || this.getCurrent()).prev();
+  hideLink: function(name) {
+    this.links[name].addClass('hidden');
   },
 
-  getNext: function($current) {
-    return ($current || this.getCurrent()).next();
+  setCurrent: function($container, options) {
+    if (typeof options === "object" && options.canvas === true) {
+      this.copyImageToCurrentCanvas();
+      this.copyImageFromContainer($container);
+    }
+
+    $current = this.$series.find('.current').removeClass('current');
+    this.$current = $container.addClass('current');
+    this.$previous = $container.prev();
+    this.$next = $container.next();
   },
 
-  addCanvas: function() {
-    var $canvasContainer = $("<div class='canvas-container drawing'></div>");
-    var $canvas = $("<canvas width='" + this.doodle.width + "' height='" + this.doodle.height + "'></canvas>");
-
-    $canvas.appendTo($canvasContainer);
-    $canvasContainer.appendTo($(this.selectors.series));
-
-    return $canvasContainer;
+  isFirst: function() {
+    this.currentIndex < 1;
   },
 
-  getContextFromContainer: function($container) {
-    return $container.find('canvas')[0].getContext('2d');
+  getFirst: function() {
+    this.$series.find("canvas:first").parent();
+  },
+
+  isRightBeforeEnd: function() {
+    return (this.currentIndex >= this.count - 2);
+  },
+
+  isFull: function() {
+    return this.count >= this.maxCount;
+  },
+
+  copyImageToCurrentCanvas: function() {
+    return this.copyImage(doodle.context, this.getContextFromContainer(this.$current));
+  },
+
+  copyImageFromContainer: function($container, options) {
+    var image = this.copyImage(this.getContextFromContainer($container), doodle.context);
+
+    if (typeof options === "object" && options.fill === true)
+      doodle.clearCanvas();
+
+    return (doodle.oldState = image);
   },
 
   copyImage: function(source, destination) {
@@ -115,34 +180,47 @@ var doodleSeries = {
     return image;
   },
 
-  slide: function(options, callback) {
-    var marginChange = (options.direction == 'left') ? '-=106px' : '+=106px';
-    $(this.selectors.series).animate({ marginLeft: marginChange }, this.duration, callback);
+  getContextFromContainer: function($container) {
+    return $container.find('canvas')[0].getContext('2d');
+  },
+
+  addCanvas: function(count) {
+    var $canvas, $canvasContainer;
+    count = (count || 1);
+
+    for (var i = 0; i < count; i++) {
+      $canvasContainer = $("<div class='canvas-container drawing'></div>"),
+      $canvas = $("<canvas width='" + this.doodle.width + "' height='" + this.doodle.height + "'></canvas>");
+
+      $canvas.appendTo($canvasContainer);
+      $canvasContainer.appendTo(this.$series);
+    }
+
+    this.count += count;
   },
 
   process: function() {
-    // to make sure that current drawing will be on canvas in doodleSeries
-    doodleSeries.copyImage(doodle.context, doodleSeries.getContextFromContainer(doodleSeries.getCurrent()));
+    var ds = doodleSeries,
+        $canvases = ds.$series.find("canvas[data-filled='true']"),
+        images = new Array($canvases.length);
 
-    var $canvases = $(doodleSeries.selectors.series).find("canvas[data-filled='true']");
-    var images = new Array($canvases.length);
+    ds.copyImageToCurrentCanvas();
 
     $canvases.each(function(i) {
       images[i] = this.toDataURL("image/png");
     });
 
-    $.post("/drawing_sets", { images: images }, doodleSeries.processCallback);
+    $.post("/drawing_sets", { images: images }, ds.processCallback);
   },
 
   reset: function() {
+    var ds = doodleSeries;
     doodle.clearCanvas();
 
-    $(doodleSeries.selectors.series).find(".canvas-container").remove();
-    $(doodleSeries.selectors.previousLink).addClass('hidden');
-    doodleSeries.addCanvas();
-    doodleSeries.addCanvas();
-    $(doodleSeries.selectors.series).find(".canvas-container:first").addClass('current');
+    ds.$series.find(".canvas-container").remove();
+    ds.addCanvas(2);
 
-    doodleSeries.alignSeriesToFrame();
+    ds.init();
+    ds.hideLink("$previous"); 
   }
 };
