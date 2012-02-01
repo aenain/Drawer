@@ -4,8 +4,8 @@ var about = {
   duration: 200,
 
   onResize: function() {
-    $(this.selector).css({ top: '100%' });
-    this.isHidden = true;
+    $(about.selector).css({ top: '100%' });
+    about.isHidden = true;
   },
 
   toggle: function() {
