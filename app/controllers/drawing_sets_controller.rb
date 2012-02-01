@@ -2,7 +2,7 @@ require 'image_i_o'
 
 class DrawingSetsController < ApplicationController
   def index
-    @drawing_sets = DrawingSet.include(:drawings).all
+    @drawing_sets = DrawingSet.includes(:drawings).all
   end
 
   def create
