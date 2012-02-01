@@ -1,5 +1,5 @@
 class DrawingSet < ActiveRecord::Base
-  has_many :drawings, :order => "id ASC"
+  has_many :drawings, dependent: :destroy, order: "id ASC"
 
   VALID_RECOGNITION = /^[\d.+\-*\/]+$/
 
