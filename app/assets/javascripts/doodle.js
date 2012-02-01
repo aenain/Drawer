@@ -108,30 +108,6 @@ doodle.newDoodle = function(src, id) {
     doodle.clearCanvas();
 }
 
-doodle.loadImage = function(event) {
-    // Stop from following link
-    event.preventDefault();
-    
-    // Clear the canvas
-    doodle.clearCanvas();
-    
-    // Load saved image onto the canvas
-    if ($(this).attr('id')) {
-        doodle.loaded_id = $(this).attr('id').slice(1);
-        var img_src = '/image?id=' + doodle.loaded_id + '&rnd='+Math.random();
-        var img = new Image();
-        img.src = img_src;
-        
-        // Wait for image to finish loading before drawing to canvas
-        img.onload = function() {
-            doodle.context.drawImage(img, 0, 0);
-            doodle.oldState = doodle.context.getImageData(0, 0, doodle.width, doodle.height);
-        };
-     } else {
-        
-    }
-}
-
 doodle.clearCanvas = function(ev) {
     // Clear existing drawing
     doodle.context.clearRect(0,0, doodle.canvas.width, doodle.canvas.height);
