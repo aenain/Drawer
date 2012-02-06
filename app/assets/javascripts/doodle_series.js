@@ -18,7 +18,10 @@ var doodleSeries = {
   count: null,
   maxCount: 30,
   processCallback: null,
-  resizeTimeout: null,
+  timeout: {
+    resize: null,
+    slide: null
+  },
 
   init: function() {
     this.cacheElements();
@@ -107,8 +110,8 @@ var doodleSeries = {
   onResize: function() {
     var ds = doodleSeries;
 
-    clearTimeout(ds.resizeTimeout);
-    ds.resizeTimeout = setTimeout(ds.afterResize, 100);
+    clearTimeout(ds.timeout.resize);
+    ds.timeout.resize = setTimeout(ds.afterResize, 100);
   },
 
   afterResize: function() {
@@ -136,6 +139,7 @@ var doodleSeries = {
 
   next: function() {
     var ds = doodleSeries;
+
     ds.showLink("$previous");
     ds.currentIndex++;
 
@@ -180,7 +184,7 @@ var doodleSeries = {
   },
 
   isFirst: function() {
-    this.currentIndex < 1;
+    return this.currentIndex < 1;
   },
 
   getFirst: function() {
@@ -188,7 +192,7 @@ var doodleSeries = {
   },
 
   isRightBeforeEnd: function() {
-    return (this.currentIndex >= this.count - 2);
+    return (this.currentIndex >= this.count - 1);
   },
 
   isFull: function() {
