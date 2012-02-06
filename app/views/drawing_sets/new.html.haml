@@ -52,6 +52,8 @@
       });
 
     $("#process").click(function() {
+      doodleProcessResponse.reset();
+
       $(".actions").fadeOut("fast", function() {
         $(".result").fadeIn("normal", function() {
           doodleProcessResponse.finish();

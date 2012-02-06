@@ -11,4 +11,8 @@ function Worker(options, callback) {
     if (self.done >= self.count)
       self.callback();
   }
+
+  self.reset = function() {
+    self.done = 0;
+  }
 };
