@@ -188,7 +188,7 @@ var doodleSeries = {
   },
 
   getFirst: function() {
-    this.$series.find("canvas:first").parent();
+    return this.$series.find("canvas:first").parent();
   },
 
   isRightBeforeEnd: function() {
