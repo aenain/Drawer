@@ -50,10 +50,10 @@ var doodleSeries = {
   },
 
   bindEvents: function() {
-     this.links.$previous.bind('click.doodleSeries.prev', this.previous);
-     this.links.$next.bind('click.doodleSeries.next', this.next);
-     this.links.$process.bind('click.doodleSeries.process', this.process);
-     this.links.$reset.bind('click.doodleSeries.reset', this.reset);
+    this.links.$previous.unbind('click.doodleSeries.prev').bind('click.doodleSeries.prev', this.previous);
+    this.links.$next.unbind('click.doodleSeries.next').bind('click.doodleSeries.next', this.next);
+    this.links.$process.unbind('click.doodleSeries.process').bind('click.doodleSeries.process', this.process);
+    this.links.$reset.unbind('click.doodleSeries.reset').bind('click.doodleSeries.reset', this.reset);
    },
 
   alignSeriesToFrame: function() {
