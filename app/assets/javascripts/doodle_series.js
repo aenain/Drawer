@@ -54,7 +54,7 @@ var doodleSeries = {
     this.links.$next.unbind('click.doodleSeries.next').bind('click.doodleSeries.next', this.next);
     this.links.$process.unbind('click.doodleSeries.process').bind('click.doodleSeries.process', this.process);
     this.links.$reset.unbind('click.doodleSeries.reset').bind('click.doodleSeries.reset', this.reset);
-   },
+  },
 
   alignSeriesToFrame: function() {
     this.$series.css({ marginLeft: (this.$frame.offset().left - 5) + 'px' });
