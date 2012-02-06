@@ -63,6 +63,7 @@
 
     $("#again").click(function() {
       $(".result").fadeOut("fast", function() {
+        $(this).find(".loader").show();
         $(this).find(".response, #again").hide();
         $(".actions").fadeIn();
       });
