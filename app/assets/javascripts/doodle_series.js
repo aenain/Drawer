@@ -50,10 +50,44 @@ var doodleSeries = {
   },
 
   bindEvents: function() {
-    this.links.$previous.unbind('click.doodleSeries.prev').bind('click.doodleSeries.prev', this.previous);
-    this.links.$next.unbind('click.doodleSeries.next').bind('click.doodleSeries.next', this.next);
-    this.links.$process.unbind('click.doodleSeries.process').bind('click.doodleSeries.process', this.process);
-    this.links.$reset.unbind('click.doodleSeries.reset').bind('click.doodleSeries.reset', this.reset);
+    this.bindEvent(this.links.$previous, 'click.doodleSeries.prev', this.previous);
+    this.bindEvent(this.links.$next, 'click.doodleSeries.next', this.next);
+    this.bindEvent(this.links.$process, 'click.doodleSeries.process', this.process);
+    this.bindEvent(this.links.$reset, 'click.doodleSeries.reset', this.reset);
+  },
+
+  bindEvent: function($element, event, callback) {
+    var index, type, namespace;
+
+    if ((index = event.indexOf(".")) > 0) {
+      type = event.substr(0, index);
+      namespace = event.substr(index + 1);
+    }
+    else {
+      type = event;
+      namespace = "";
+    }
+
+    if (! this.checkEvent($element, type, namespace))
+      $element.bind(event, callback);
+  },
+
+  checkEvent: function($elements, type, namespace) {
+    return $.grep($elements, function(element, index) {
+      var events = (($.data(element, 'events') || {})[type] || []),
+          found = false;
+      if (typeof namespace == "undefined" || namespace.length == 0)
+        found = events.length > 0;
+      else {
+        for (var i = 0; i < events.length; i++) {
+          if (events[i].namespace == namespace) {
+            found = true;
+            break;
+          }
+        }
+      }
+      return found;
+    }).length > 0;
   },
 
   alignSeriesToFrame: function() {
