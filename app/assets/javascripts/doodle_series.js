@@ -13,7 +13,7 @@ var doodleSeries = {
     width: 100,
     height: 100
   },
-  duration: 200,
+  duration: 400,
   index: 0,
   count: null,
   maxCount: 30,
@@ -94,7 +94,13 @@ var doodleSeries = {
   },
 
   alignSeriesToFrame: function() {
-    this.$series.css({ marginLeft: (this.$frame.offset().left - 5) + 'px' });
+    var translate = "translate(0px, 0px)";
+    this.$series.css({ marginLeft: (this.$frame.offset().left - 5) + 'px',
+                       '-moz-transform': translate,
+                       '-webkit-transform': translate,
+                       '-o-transform': translate,
+                       '-ms-transform': translate,
+                       'transform': translate });
   },
 
   isFilled: function($container) {
@@ -157,10 +163,17 @@ var doodleSeries = {
   },
 
   slide: function(options, callback) {
+    clearTimeout(this.timeout.slide);
     doodle.hide();
 
-    var marginChange = (options.direction == 'left') ? '-=106px' : '+=106px';
-    this.$series.animate({ marginLeft: marginChange }, this.duration, callback);
+    var translate = "translate(" + (-this.currentIndex * 106) + "px)";
+    this.$series.css({ "-webkit-transform": translate,
+                       "-moz-transform": translate,
+                       "-o-transform": translate,
+                       "-ms-transform": translate,
+                       "transform": translate });
+
+    this.timeout.slide = setTimeout(callback, this.duration);
   },
 
   showLink: function(name) {

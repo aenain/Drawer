@@ -1,3 +1,5 @@
+@import 'css3'
+
 html, body
   padding: 0
   margin: 0
@@ -61,6 +63,7 @@ a
     padding: 1px 0
     width: 10000px
     overflow: hidden
+    @include transition(all 0.4s ease-in-out)
 
   .canvas-container
     display: block
@@ -73,6 +76,7 @@ a
       border: 1px solid #ddd
 
       background-color: #fff
+      @include transition(all 0.2s ease)
 
       canvas
         padding: 0
@@ -85,7 +89,7 @@ a
     &.frame
       position: relative
       border: 5px solid #319ee6
-      border-radius: 5px
+      @include border-radius(5px)
       margin: -6px -2px 0 -2px
       z-index: 10
 
@@ -148,7 +152,7 @@ a
   a.link
     display: block
     margin-top: -36px
-    border-radius: 10px
+    @include border-radius(10px)
     background-color: #555
     padding: 10px 15px 17px 15px
     text-shadow: #333 1px 1px 0

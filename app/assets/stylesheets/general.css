@@ -55,7 +55,12 @@ a {
     margin-left: 350px;
     padding: 1px 0;
     width: 10000px;
-    overflow: hidden; }
+    overflow: hidden;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out; }
   .content .canvas-container {
     display: block;
     float: left; }
@@ -64,7 +69,12 @@ a {
       height: 100px;
       margin: -1px 2px;
       border: 1px solid #dddddd;
-      background-color: white; }
+      background-color: white;
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      -ms-transition: all 0.2s ease;
+      transition: all 0.2s ease; }
       .content .canvas-container.drawing canvas {
         padding: 0;
         margin: 0; }
@@ -74,6 +84,8 @@ a {
     .content .canvas-container.frame {
       position: relative;
       border: 5px solid #319ee6;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
       border-radius: 5px;
       margin: -6px -2px 0 -2px;
       z-index: 10; }
@@ -125,6 +137,8 @@ a {
   .about a.link {
     display: block;
     margin-top: -36px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
     border-radius: 10px;
     background-color: #555555;
     padding: 10px 15px 17px 15px;
