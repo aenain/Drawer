@@ -1,5 +1,5 @@
 module Paperclip
-  class Mateusz < Processor
+  class AddCaption < Processor
     attr_accessor :whiny
 
     def initialize(file, options = {}, attachment = nil)
