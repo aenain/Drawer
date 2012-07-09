@@ -36,7 +36,7 @@ module Paperclip
 
         parameters = parameters.flatten.compact.join(" ").strip.squeeze(" ")
 
-        success = Paperclip.run("convert", parameters, source: "#{File.expand_path(src.path)}", dest: File.expand_path(dst.path))
+        success = Paperclip.run("convert", parameters, source: File.expand_path(src.path), dest: File.expand_path(dst.path))
       rescue Cocaine::ExitStatusError => e
         raise PaperclipError, "There was an error processing a caption for #{@basename}" if @whiny
       rescue Cocaine::CommandNotFoundError => e
