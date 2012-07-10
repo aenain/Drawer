@@ -1,3 +1,11 @@
+== Hello and welcome!
+
+This simple application has been emerged to allow a friend of mine using a neural network to recognize digits and do some simple math.
+There came across some difficulties and the neural network could not correctly recognize all of the digits.Nevertheless I hope that in the future they will be overcome.
+So unfortunately this is only an interface with simple paperclip processors if someone needed.
+
+On the css3 branch I've experimented a bit with cool transitions, so check it out :D
+
 == Welcome to Rails
 
 Rails is a web-application framework that includes everything needed to create
