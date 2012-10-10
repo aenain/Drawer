@@ -16,13 +16,13 @@ ActiveRecord::Schema.define(:version => 20120131143418) do
   create_table "drawing_sets", :force => true do |t|
     t.string   "recognition"
     t.string   "evaluation"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "drawings", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
     t.string   "sketch_file_name"
     t.string   "sketch_content_type"
     t.integer  "sketch_file_size"
